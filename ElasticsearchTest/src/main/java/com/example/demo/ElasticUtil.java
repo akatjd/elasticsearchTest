@@ -9,10 +9,13 @@ import org.apache.http.HttpHost;
 import org.apache.ibatis.io.Resources;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 
 public class ElasticUtil {
 	
@@ -22,7 +25,7 @@ public class ElasticUtil {
 	private ElasticUtil() throws IOException {
 		
         Properties properties = new Properties();
-        Reader reader = Resources.getResourceAsReader("best/gaia/db/dbinfo.properties");
+        Reader reader = Resources.getResourceAsReader("el.properties");
         properties.load(reader);
         String hostname = properties.getProperty("el.url");
         int port = Integer.parseInt(properties.getProperty("el.port"));
@@ -53,6 +56,21 @@ public class ElasticUtil {
 		}
 		
 		return response.getSourceAsMap();
+		
+	}
+	
+	public IndexResponse create(String index, String id, String jsonBody) {
+		
+		IndexResponse response = null;
+		
+		IndexRequest indexRequest = new IndexRequest(index).id(id).source(jsonBody, XContentType.JSON);
+		
+		try {
+			response = client.index(indexRequest, RequestOptions.DEFAULT);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		return response;
 		
 	}
 	
