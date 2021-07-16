@@ -16,6 +16,7 @@ local.properties
 .externalToolBuilders/
 
 # ignore properties file
+application.properties
 el.properties
 
 # Locally stored "Eclipse launch configurations"
