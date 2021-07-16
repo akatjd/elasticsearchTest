@@ -18,26 +18,35 @@ public class ElasticsearchTestApplication {
 
 	public static void main(String[] args) throws IOException {
 		
-		SpringApplication.run(ElasticsearchTestApplication.class, args);
-		
-		String hostname = "172.30.1.29";
-		int port = 9200;
-		HttpHost host = new HttpHost(hostname, port);
-		System.out.println(host);
-		RestClientBuilder restClientBuilder = RestClient.builder(host);
-		RestHighLevelClient client = new RestHighLevelClient(restClientBuilder);
+//		SpringApplication.run(ElasticsearchTestApplication.class, args);
+//		
+//		String hostname = "172.30.1.29";
+//		int port = 9200;
+//		HttpHost host = new HttpHost(hostname, port);
+//		System.out.println(host);
+//		RestClientBuilder restClientBuilder = RestClient.builder(host);
+//		RestHighLevelClient client = new RestHighLevelClient(restClientBuilder);
+//		
+//		String index = "gaia";
+//		String id = "1";
+//		GetRequest getRequest = new GetRequest(index, id);
+//		RequestOptions options = RequestOptions.DEFAULT;
+//		
+//		GetResponse response = client.get(getRequest, options);
+//		
+//		Map<String, Object> map = response.getSourceAsMap();
+//		System.out.println(map);
+//		
+//		client.close();
 		
 		String index = "gaia";
 		String id = "1";
-		GetRequest getRequest = new GetRequest(index, id);
-		RequestOptions options = RequestOptions.DEFAULT;
 		
-		GetResponse response = client.get(getRequest, options);
+		ElasticUtil elastic = ElasticUtil.getInstance();
 		
-		Map<String, Object> map = response.getSourceAsMap();
+		Map<String, Object> map = elastic.getReponse(index, id);
+		
 		System.out.println(map);
-		
-		client.close();
 		
 	}
 
