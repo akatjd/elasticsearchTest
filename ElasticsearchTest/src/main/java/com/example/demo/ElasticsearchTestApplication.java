@@ -1,7 +1,10 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
@@ -15,6 +18,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -23,7 +27,7 @@ public class ElasticsearchTestApplication {
 
 	public static void main(String[] args) throws IOException {
 		
-//		SpringApplication.run(ElasticsearchTestApplication.class, args);
+		SpringApplication.run(ElasticsearchTestApplication.class, args);
 //		
 //		String hostname = "172.30.1.29";
 //		int port = 9200;
@@ -54,20 +58,35 @@ public class ElasticsearchTestApplication {
 //		
 //		System.out.println(map);
 		
-		String index = "gaia";
-		String id = "1";
+//		String index = "alarm";
+//		String id = "2";
+//		
+//		ElasticUtil elastic = ElasticUtil.getInstance();
+//		
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("date", LocalDateTime.now());
+//		map.put("ioossue_his_cont", "아 모르겠다...2222");
+//		map.put("alarm_type", "IC");
+//		map.put("mem_no", "4");
+//		
+//		IndexResponse response = elastic.create(index, id, map);
+//		
+//		System.out.println(response);
 		
-		ElasticUtil elastic = ElasticUtil.getInstance();
+		ElasticSearchUtil elastic = ElasticSearchUtil.getInstance();
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("새로운 항목", 155);
-		map.put("test", 153);
-		XContentBuilder xContent = XContentFactory.jsonBuilder().map(map);
-		String jsonBody = Strings.toString(xContent);
+		String index = "alarm";
 		
-		IndexResponse response = elastic.create(index, id, jsonBody);
+		Map<String,Object> query = new HashMap<>();
+		query.put("mem_no", 4);
 		
-		System.out.println(response);
+		Map<String,SortOrder> sort = new HashMap<>();
+		sort.put("date", SortOrder.DESC);
+		
+		List<Map<String, Object>> list = elastic.simpleSearch(index, query, sort);
+		for(Map<String, Object> map : list) {
+			System.out.println(map);
+		}
 		
 	}
 

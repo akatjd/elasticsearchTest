@@ -15,6 +15,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 
 public class ElasticUtil {
@@ -59,17 +62,16 @@ public class ElasticUtil {
 		
 	}
 	
-	public IndexResponse create(String index, String id, String jsonBody) {
+	public IndexResponse create(String index, String id, Map<String, Object> data) throws IOException {
 		
 		IndexResponse response = null;
 		
+		XContentBuilder xContent = XContentFactory.jsonBuilder().map(data);
+		String jsonBody = Strings.toString(xContent);
 		IndexRequest indexRequest = new IndexRequest(index).id(id).source(jsonBody, XContentType.JSON);
 		
-		try {
-			response = client.index(indexRequest, RequestOptions.DEFAULT);
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		response = client.index(indexRequest, RequestOptions.DEFAULT);
+
 		return response;
 		
 	}
